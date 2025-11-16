@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AyurvedaCare — Doctor Chatbot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="static/style.css">
+
+</head>
+<body>
+  <div class="container">
+    <div class="card" style="position:relative;overflow:visible">
+      <div class="brand">
+        <div class="logo" aria-hidden>
+          <!-- leaf + mortar icon -->
+          <svg viewBox="0 0 64 64" width="36" height="36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 44c0-12 20-22 32-14" stroke="#fff" stroke-opacity="0.9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M20 18c8 0 10 8 10 8s6-2 12 2c0 0-6 8-20 8S6 28 6 20c0-2 3-2 6-2z" fill="#09320b" opacity="0.12"/>
+          </svg>
+        </div>
+        <div>
+          <h1>AyurvedaCare</h1>
+          <p>Herbal doctor chatbot — personalized Ayurvedic guidance</p>
+        </div>
+      </div>
+
+      <p class="about">Ask the Ayurvedic doctor anything — remedies, lifestyle, herbs, or dietary tips. This assistant provides guidance rooted in classical Ayurvedic principles. Not a replacement for clinical diagnosis.</p>
+
+      <div class="pill-row">
+        <div class="pill">Vata • Pitta • Kapha</div>
+        <div class="pill">Herbal Remedies</div>
+        <div class="pill">Diet &amp; Lifestyle</div>
+        <div class="pill">Dosha Quiz</div>
+      </div>
+
+      <div class="info-list">
+        <div class="info-item"><div class="dot"></div><div class="small">Evidence-informed suggestions</div></div>
+        <div class="info-item"><div class="dot" style="background:var(--accent-2)"></div><div class="small">Hints for safe home remedies</div></div>
+        <div class="info-item"><div class="dot" style="background:#7fc2d1"></div><div class="small">Lifestyle plans & morning routines</div></div>
+      </div>
+
+      <div style="margin-top:18px;display:flex;gap:10px;align-items:center;justify-content:space-between">
+        <div>
+          <div class="small">Ready to chat?</div>
+          <div style="font-weight:700;margin-top:6px">Start a consultation — free</div>
+        </div>
+        <button class="send-btn" style="padding:10px 12px;border-radius:10px">Start</button>
+      </div>
+
+      <svg class="herb" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+        <g fill="none" stroke="url(#g)" stroke-width="2">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#9ccf6b" stop-opacity="0.9"/>
+              <stop offset="1" stop-color="#c7b16b" stop-opacity="0.6"/>
+            </linearGradient>
+          </defs>
+          <path d="M40 150c20-40 60-60 90-90"/>
+          <path d="M60 120c18-22 42-40 72-56"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="chat-panel card">
+      <div class="chat-header">
+        <div class="bot-avatar" aria-hidden>
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3c2 0 4 2 4 4 0 3-4 6-4 6s-4-3-4-6c0-2 2-4 4-4z" fill="#fff" opacity="0.95"/>
+            <path d="M6 17c1.5-3 4.5-5 10-4" stroke="#062107" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="header-title">
+          <h2>Dr. Veda — Ayurvedic Chatbot</h2>
+          <p>Clinical-style tips • herbal knowledge • lifestyle advice</p>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div class="small">Health score</div>
+          <div style="width:56px;height:10px;background:rgba(255,255,255,0.04);border-radius:6px;overflow:hidden">
+            <div style="width:72%;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2))"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-body" id="chatBody">
+        <!-- sample messages -->
+        <div>
+          <div class="message msg-bot">Namaste! I am Dr. Veda. Tell me your main health concern — digestion, sleep, skin, or energy?</div>
+          <div class="timestamp">Dr. Veda • just now</div>
+        </div>
+
+        <div style="align-self:flex-end">
+          <div class="message msg-user">I've been feeling bloated after meals. Any advice?</div>
+          <div class="timestamp" style="text-align:right">You • 2 min ago</div>
+        </div>
+
+        <div>
+          <div class="message msg-bot">For bloating, try warm fennel infusion after meals, eat slowly, and avoid cold drinks with food. Would you like a simple herbal recipe?</div>
+          <div class="timestamp">Dr. Veda • 1 min ago</div>
+        </div>
+      </div>
+
+      <div class="chat-footer">
+        <input id="prompt" class="input" placeholder="Ask Dr. Veda — e.g. remedies for sleeplessness" />
+        <button id="send" class="send-btn">Send</button>
+      </div>
+    </div>
+  </div>
+
+ <script>
+const chatBody = document.getElementById('chatBody');
+const input = document.getElementById('prompt');
+const send = document.getElementById('send');
+
+function appendMessage(text, kind='bot'){
+    const wrapper = document.createElement('div');
+    const msg = document.createElement('div');
+    msg.className = 'message ' + (kind==='bot' ? 'msg-bot' : 'msg-user');
+    msg.textContent = text;
+
+    wrapper.appendChild(msg);
+
+    const ts = document.createElement('div');
+    ts.className = 'timestamp';
+    ts.textContent = (kind==='bot' ? 'Dr. Veda • just now' : 'You • just now');
+
+    wrapper.appendChild(ts);
+
+    chatBody.appendChild(wrapper);
+    chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+send.addEventListener('click', ()=>{
+    const text = input.value.trim();
+    if(!text) return;
+
+    appendMessage(text, 'user');   
+    input.value = "";
+
+    // send msg to Flask backend
+    fetch("/get", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "msg=" + encodeURIComponent(text)
+    })
+    .then(res => res.text())
+    .then(data => {
+        appendMessage(data, 'bot');
+    })
+    .catch(err => {
+        appendMessage("⚠️ Server error: " + err, 'bot');
+    });
+});
+
+input.addEventListener('keydown', (e)=>{
+    if(e.key === "Enter") send.click();
+});
+</script>
+
+</body>
+</html>
